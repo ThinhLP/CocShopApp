@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtUsername;
     private EditText edtPassword;
     private Button btnLogin;
-    private Button btn3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +59,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
 
                 int statusCode  = response.code();
-                System.out.println(response.body().getFirstname());
-                System.out.println(statusCode);
                 switch (statusCode) {
                     case 200:
                         makeToast("Login successfully");
@@ -75,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                makeToast("Error cmnr");
+                makeToast("Can't connect to server");
             }
         });
     }
