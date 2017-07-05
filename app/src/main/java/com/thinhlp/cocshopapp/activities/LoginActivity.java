@@ -1,5 +1,6 @@
 package com.thinhlp.cocshopapp.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,8 +46,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-
-
     public void checkLogin() {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
@@ -60,10 +59,20 @@ public class LoginActivity extends AppCompatActivity {
 
                 int statusCode  = response.code();
                 switch (statusCode) {
-                    case 200:
-                        makeToast("Login successfully");
+                    case Const.HTTP_STATUS.OK:
+                        User user = response.body();
+                        // Authorize
+                        switch (user.getRole()) {
+                            case Const.ROLE.CUSTOMER:
+                                switchToCustomerActivity();
+                                break;
+                            case Const.ROLE.EMPLOYEE:
+                            case Const.ROLE.ADMIN:
+                                switchToCustomerActivity();
+                                break;
+                        }
                         break;
-                    case 401:
+                    case Const.HTTP_STATUS.UNAUTHORIZED:
                         makeToast("Login failed");
                         break;
                 }
@@ -81,6 +90,10 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this.getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void switchToCustomerActivity() {
+        Intent i = new Intent(this, CustomerActivity.class);
+        startActivity(i);
+    }
 
 
 }

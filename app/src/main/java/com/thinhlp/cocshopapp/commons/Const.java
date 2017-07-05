@@ -6,7 +6,13 @@ package com.thinhlp.cocshopapp.commons;
 
 public class Const {
     public static class HTTP_STATUS {
-        public static int OK = 200;
-        public static int UNAUTHORIZED = 403;
+        public static final int OK = 200;
+        public static final int UNAUTHORIZED = 403;
+    }
+
+    public static class ROLE {
+        public static final int ADMIN = 1;
+        public static final int EMPLOYEE = 2;
+        public static final int CUSTOMER = 3;
     }
 }
