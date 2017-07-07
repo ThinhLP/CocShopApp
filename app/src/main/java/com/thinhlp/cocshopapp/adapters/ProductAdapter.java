@@ -5,8 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.thinhlp.cocshopapp.R;
@@ -34,7 +32,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.product_cart_view, parent, false);
 
-        return new ProductViewHolder(itemView);
+        return new ProductViewHolder(context, itemView);
     }
 
     @Override
@@ -43,6 +41,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
         holder.description.setText(product.getDescription() == null ? "" : product.getDescription());
         holder.productName.setText(product.getProductName());
         holder.price.setText(product.getPrice() + "đ");
+        holder.product = product;
         String imageUrl = product.getImageUrl();
         if (imageUrl != null) {
             Picasso.with(context).load(imageUrl).into(holder.productImg);

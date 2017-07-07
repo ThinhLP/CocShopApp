@@ -1,6 +1,7 @@
 package com.thinhlp.cocshopapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 switch (statusCode) {
                     case Const.HTTP_STATUS.OK:
                         User user = response.body();
+                        storeUserInfo(user);
                         // Authorize
                         switch (user.getRole()) {
                             case Const.ROLE.CUSTOMER:
@@ -93,6 +95,15 @@ public class LoginActivity extends AppCompatActivity {
     public void switchToCustomerActivity() {
         Intent i = new Intent(this, CustomerActivity.class);
         startActivity(i);
+    }
+
+    private void storeUserInfo(User user) {
+        SharedPreferences sp = getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, user.getUserId());
+
+        editor.commit();
     }
 
 
