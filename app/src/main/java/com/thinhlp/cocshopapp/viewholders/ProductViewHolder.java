@@ -64,12 +64,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
                 int quantity = Integer.parseInt(quantityStr);
                 if (quantity > 0) {
                     CartService cartService = new CartService(context);
-                    boolean result = cartService.addToCart(product, quantity);
-                    if (result) {
-                        msg = "Add to cart successfully";
-                    } else {
-                        msg = "Can't add this item to cart";
-                    }
+                    msg = cartService.addToCart(product, quantity);
                 }
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             }
