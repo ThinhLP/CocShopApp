@@ -1,5 +1,6 @@
 package com.thinhlp.cocshopapp.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.entities.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,7 +20,8 @@ import java.util.List;
  */
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
+    private Context context;
 
     public class ProductViewHolder extends RecyclerView.ViewHolder {
         public TextView productName, description, price;
@@ -32,8 +36,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         }
     }
 
-    public ProductAdapter(List<Product> productList) {
+    public ProductAdapter(Context context, List<Product> productList) {
         this.productList = productList;
+        this.context = context;
     }
 
     @Override
@@ -46,10 +51,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     @Override
     public void onBindViewHolder(ProductAdapter.ProductViewHolder holder, int position) {
-        //Product product = productList.get(position);
-        holder.description.setText("ahihi");
-        holder.productName.setText("Coca cola");
-        holder.price.setText("20000d");
+        Product product = productList.get(position);
+        holder.description.setText(product.getDescription() == null ? "" : product.getDescription());
+        holder.productName.setText(product.getProductName());
+        holder.price.setText(product.getPrice() + "đ");
+        String imageUrl = product.getImageUrl();
+        if (imageUrl != null) {
+            Picasso.with(context).load(imageUrl).into(holder.productImg);
+        }
     }
 
     @Override
