@@ -1,7 +1,9 @@
 package com.thinhlp.cocshopapp.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -50,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     public void checkLogin() {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
-        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(getBaseContext(), "Username and password must be filled", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -62,6 +64,11 @@ public class LoginActivity extends AppCompatActivity {
                 switch (statusCode) {
                     case 200:
                         makeToast("Login successfully");
+                        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                        startActivity(intent);
+                        finish();
+
+
                         break;
                     case 401:
                         makeToast("Login failed");
