@@ -103,29 +103,42 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Register
         userService.register(username, password, firstname, lastname, email, date, phone).enqueue(new Callback<RegisterError>() {
             @Override
             public void onResponse(Call<RegisterError> call, Response<RegisterError> response) {
-                int statusCode = response.code();
-                response.body();
-                response.message();
-                switch (statusCode) {
-                    case 200:
-                        finish();
-                        break;
-                    case 400:
-                        Toast.makeText(getBaseContext(),response.body().getMessages().get(0),Toast.LENGTH_SHORT).show();
-                        break;
-                }
-
+                System.out.println(response.code());
+                System.out.println(response.body().getCode());
+                System.out.println(response.body().getMessages() == null ? "null cmnr" : "ahihi");
             }
 
             @Override
             public void onFailure(Call<RegisterError> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Error cmnr", Toast.LENGTH_SHORT).show();
             }
         });
+        // Register
+//        userService.register(username, password, firstname, lastname, email, date, phone).enqueue(new Callback<RegisterError>() {
+//            @Override
+//            public void onResponse(Call<RegisterError> call, Response<RegisterError> response) {
+//                int statusCode = response.code();
+//                switch (statusCode) {
+//                    case 200:
+//                        finish();
+//                        break;
+//                    case 400:
+//                        RegisterError error = response.body();
+//                        System.out.println(error.getCode());
+//                        //Toast.makeText(getBaseContext(),response.body().getMessages().get(0),Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RegisterError> call, Throwable t) {
+//                Toast.makeText(getBaseContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
 

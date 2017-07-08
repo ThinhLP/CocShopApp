@@ -18,8 +18,8 @@ public interface UserService {
 
     @POST("register")
     Call<RegisterError> register(@Query("username") String username, @Query("password") String password,
-                                 @Query("firstname") String firstname, @Query("lastname") String lastname,
-                                 @Query("email") String email, @Query("date") String date,
+                                 @Query("firstName") String firstName, @Query("lastName") String lastName,
+                                 @Query("email") String email, @Query("birthday") String birthday,
                                  @Query("phone") String phone);
 
 }

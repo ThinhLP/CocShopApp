@@ -7,6 +7,6 @@ package com.thinhlp.cocshopapp.commons;
 public class Const {
     public static class HTTP_STATUS {
         public static int OK = 200;
-        public static int UNAUTHORIZED = 403;
+        public static int UNAUTHORIZED = 401;
     }
 }

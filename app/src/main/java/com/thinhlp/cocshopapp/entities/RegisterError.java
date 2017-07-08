@@ -12,17 +12,16 @@ import java.util.List;
 public class RegisterError {
     @SerializedName("code")
     @Expose
-    private int code;
+    private Integer code;
     @SerializedName("messages")
     @Expose
-    private List<String> messages;
+    private List<String> messages = null;
 
-
-    public int getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
@@ -33,4 +32,5 @@ public class RegisterError {
     public void setMessages(List<String> messages) {
         this.messages = messages;
     }
+
 }
