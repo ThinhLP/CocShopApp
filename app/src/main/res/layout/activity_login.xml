@@ -46,7 +46,7 @@
                 android:layout_marginLeft="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="admin" />
+                android:text="" />
         </TableRow>
 
         <TableRow
@@ -67,7 +67,7 @@
                 android:layout_marginLeft="10dp"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:text="admin" />
+                android:text="" />
         </TableRow>
 
     </TableLayout>
@@ -91,12 +91,13 @@
             android:text="Hasn't got any account?" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/signup"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginLeft="8dp"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
+            android:onClick="signup"
             android:text="Sign up"
             android:textAllCaps="false"
             android:textColor="@color/colorAccent"

@@ -1,8 +1,10 @@
 package com.thinhlp.cocshopapp.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -13,7 +15,6 @@ import android.widget.Toast;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
 import com.thinhlp.cocshopapp.entities.RegisterError;
-import com.thinhlp.cocshopapp.entities.User;
 import com.thinhlp.cocshopapp.services.UserService;
 
 import java.util.Calendar;
@@ -106,39 +107,25 @@ public class RegisterActivity extends AppCompatActivity {
         userService.register(username, password, firstname, lastname, email, date, phone).enqueue(new Callback<RegisterError>() {
             @Override
             public void onResponse(Call<RegisterError> call, Response<RegisterError> response) {
-                System.out.println(response.code());
-                System.out.println(response.body().getCode());
-                System.out.println(response.body().getMessages() == null ? "null cmnr" : "ahihi");
+                int statusCode = response.body().getCode();
+
+                if (statusCode == 200) {
+                    Toast.makeText(getBaseContext(), "Sign up sucessfully", Toast.LENGTH_SHORT).show();
+                    returnLogin();
+                }
+
+                if (statusCode == 400) {
+                    String status = response.body().getMessages().get(0);
+                    Toast.makeText(getBaseContext(), status, Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
 
             @Override
             public void onFailure(Call<RegisterError> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Error cmnr", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Error!!", Toast.LENGTH_SHORT).show();
             }
         });
-        // Register
-//        userService.register(username, password, firstname, lastname, email, date, phone).enqueue(new Callback<RegisterError>() {
-//            @Override
-//            public void onResponse(Call<RegisterError> call, Response<RegisterError> response) {
-//                int statusCode = response.code();
-//                switch (statusCode) {
-//                    case 200:
-//                        finish();
-//                        break;
-//                    case 400:
-//                        RegisterError error = response.body();
-//                        System.out.println(error.getCode());
-//                        //Toast.makeText(getBaseContext(),response.body().getMessages().get(0),Toast.LENGTH_SHORT).show();
-//                        break;
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<RegisterError> call, Throwable t) {
-//                Toast.makeText(getBaseContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
 
@@ -168,4 +155,21 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            returnLogin();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    public void returnLogin() {
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
