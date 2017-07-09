@@ -25,6 +25,16 @@ public class CartItem {
         this.imageUrl = product.getImageUrl();
     }
 
+    public CartItem(int id, int customerId, int productId, String productName, int quantity, int price, String imageUrl) {
+        this.id = id;
+        this.customerId = customerId;
+        this.productId = productId;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public int getId() {
         return id;
     }

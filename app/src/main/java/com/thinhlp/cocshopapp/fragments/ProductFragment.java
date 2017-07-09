@@ -55,7 +55,7 @@ public class ProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_product, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rvProduct);
         return rootView;
     }
 

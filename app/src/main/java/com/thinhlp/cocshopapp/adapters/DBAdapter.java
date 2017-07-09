@@ -111,7 +111,7 @@ public class DBAdapter {
 
     // GET ALL CART ITEMS OF CUSTOMER
     public Cursor getAllItems(int customerId) {
-        return db.query(DATABASE_TABLE, tables, null, null, null, null, null);
+        return db.query(DATABASE_TABLE, tables, CUSTOMER_ID + "=" + customerId, null, null, null, null);
     }
 
     // UPDATE CART ITEM

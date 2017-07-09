@@ -9,6 +9,9 @@ import com.thinhlp.cocshopapp.commons.Const;
 import com.thinhlp.cocshopapp.entities.CartItem;
 import com.thinhlp.cocshopapp.entities.Product;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by thinhlp on 7/7/17.
  */
@@ -52,7 +55,32 @@ public class CartService {
                 }
             }
         }
+        db.close();
         return msg;
+    }
+
+    public List<CartItem> getCart() {
+        DBAdapter db = new DBAdapter(context);
+        db.open();
+        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
+        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        List<CartItem> result = new ArrayList<>();
+        Cursor cursor = db.getAllItems(customerId);
+        if (cursor.moveToFirst()) {
+            while (!cursor.isAfterLast()) {
+                Integer id = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.KEY_ROWID));
+                Integer cusId = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.CUSTOMER_ID));
+                Integer productId = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRODUCT_ID));
+                String productName = cursor.getString(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRODUCT_NAME));
+                Integer quantity = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.QUANTITY));
+                Integer price = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRICE));
+                String imageUrl = cursor.getString(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.IMAGE_URL));
+                result.add(new CartItem(id, cusId, productId, productName, quantity, price, imageUrl));
+                cursor.moveToNext();
+            }
+        }
+        db.close();
+        return result;
     }
 
 
