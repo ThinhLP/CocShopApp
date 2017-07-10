@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
+import com.thinhlp.cocshopapp.commons.Const;
 import com.thinhlp.cocshopapp.entities.RegisterError;
 import com.thinhlp.cocshopapp.services.UserService;
 
@@ -35,7 +36,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edtPhone;
     private TextView txtBirth;
     private final String dateFormat = "yyyy-MM-dd";
-    private Button btnSignup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,29 +92,17 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Check exist Username
-        if (false) {
-            Toast.makeText(getBaseContext(), "Username has been existed!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check exist Email
-        if (false) {
-            Toast.makeText(getBaseContext(), "Email has been existed!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         userService.register(username, password, firstname, lastname, email, date, phone).enqueue(new Callback<RegisterError>() {
             @Override
             public void onResponse(Call<RegisterError> call, Response<RegisterError> response) {
                 int statusCode = response.body().getCode();
 
-                if (statusCode == 200) {
-                    Toast.makeText(getBaseContext(), "Sign up sucessfully", Toast.LENGTH_SHORT).show();
+                if (statusCode == Const.HTTP_STATUS.OK) {
+                    Toast.makeText(getBaseContext(), "Sign up successfully", Toast.LENGTH_SHORT).show();
                     returnLogin();
                 }
 
-                if (statusCode == 400) {
+                if (statusCode == Const.HTTP_STATUS.BAD_REQUEST) {
                     String status = response.body().getMessages().get(0);
                     Toast.makeText(getBaseContext(), status, Toast.LENGTH_SHORT).show();
                     return;
@@ -155,21 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            returnLogin();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-
     public void returnLogin() {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
         finish();
     }
 }

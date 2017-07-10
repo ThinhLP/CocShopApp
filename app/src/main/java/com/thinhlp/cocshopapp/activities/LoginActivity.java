@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
+import com.thinhlp.cocshopapp.commons.Const;
 import com.thinhlp.cocshopapp.entities.User;
 import com.thinhlp.cocshopapp.services.UserService;
 
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
     public void signup(View view) {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     public void switchToCustomerActivity() {
