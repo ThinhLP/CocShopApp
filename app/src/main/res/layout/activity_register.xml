@@ -39,11 +39,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username:"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtUsername"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:inputType="textPersonName"
@@ -59,11 +59,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Password:"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtPassword"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ems="10"
@@ -78,11 +78,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Confirm password:"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtConfirmPassword"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ems="10"
@@ -98,11 +98,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email:"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtEmail"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ems="10"
@@ -118,11 +118,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Confirm email:"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtConfirmEmail"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ems="10"
@@ -138,11 +138,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="First name: "
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtFirstname"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ems="10"
@@ -158,11 +158,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Last name"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtLastname"
-                android:layout_width="200dp"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:ems="10"
@@ -178,11 +178,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Phone number"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtPhone"
-                android:layout_width="wrap_content"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:layout_marginLeft="10dp"
@@ -193,12 +193,13 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Birthday"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/txtBirth"
@@ -211,7 +212,6 @@
                 android:id="@+id/button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="-100dp"
                 android:width="30dp"
                 android:background="@drawable/calendar"
                 android:onClick="pickDate" />
