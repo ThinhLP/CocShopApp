@@ -9,8 +9,9 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.entities.CartItem;
+import com.thinhlp.cocshopapp.fragments.CartFragment;
+import com.thinhlp.cocshopapp.listeners.CartListener;
 import com.thinhlp.cocshopapp.viewholders.CartViewHolder;
-import com.thinhlp.cocshopapp.viewholders.ProductViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,12 @@ import java.util.List;
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     private List<CartItem> items = new ArrayList<>();
     private Context context;
+    private CartListener cartListener;
 
-    public CartAdapter(Context context, List<CartItem> items) {
+    public CartAdapter(Context context, List<CartItem> items, CartListener cartListener) {
         this.items = items;
         this.context = context;
+        this.cartListener = cartListener;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cart_item_view, parent, false);
 
-        return new CartViewHolder(context, itemView);
+        return new CartViewHolder(context, itemView, cartListener);
     }
 
     @Override
@@ -52,5 +55,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    public void updateItemInCart(int position, List<CartItem> items) {
+        this.items = items;
+        notifyItemChanged(position);
     }
 }

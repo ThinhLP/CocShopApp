@@ -18,14 +18,15 @@ import java.util.List;
 
 public class CartService {
 
-    Context context;
+    private Context context;
+    private DBAdapter db;
 
     public CartService(Context context) {
         this.context = context;
+        db = new DBAdapter(context);
     }
 
     public String addToCart(Product product, int quantity) {
-        DBAdapter db = new DBAdapter(context);
         db.open();
         SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
         int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
@@ -60,7 +61,6 @@ public class CartService {
     }
 
     public List<CartItem> getCart() {
-        DBAdapter db = new DBAdapter(context);
         db.open();
         SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
         int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
@@ -75,7 +75,8 @@ public class CartService {
                 Integer quantity = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.QUANTITY));
                 Integer price = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRICE));
                 String imageUrl = cursor.getString(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.IMAGE_URL));
-                result.add(new CartItem(id, cusId, productId, productName, quantity, price, imageUrl));
+                Integer inStock = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRODUCT_IN_STOCK));
+                result.add(new CartItem(id, cusId, productId, productName, quantity, price, imageUrl, inStock));
                 cursor.moveToNext();
             }
         }
@@ -83,5 +84,18 @@ public class CartService {
         return result;
     }
 
+    public boolean updateQuantity(int id, int quantity) {
+        db.open();
+        boolean result = db.updateQuantityOfItem(id, quantity);
+        db.close();
+        return result;
+    }
+
+    public boolean deleteItem(int id) {
+        db.open();
+        boolean result = db.deleteCartItem(id);
+        db.close();
+        return result;
+    }
 
 }

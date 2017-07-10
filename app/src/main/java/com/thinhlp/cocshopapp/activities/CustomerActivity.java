@@ -32,10 +32,10 @@ public class CustomerActivity extends AppCompatActivity{
                 case R.id.navigation_home:
                     selectedFragment = ProductFragment.newInstance();
                     break;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_cart:
                     selectedFragment = CartFragment.newInstance();
                     break;
-                case R.id.navigation_notifications:
+                case R.id.navigation_history:
                     selectedFragment = HistoryFragment.newInstance();
                     break;
             }

@@ -23,7 +23,7 @@ public class DBAdapter {
     static final String QUANTITY = Const.SQLITE.TABLE_NAME.QUANTITY;
     static final String PRICE = Const.SQLITE.TABLE_NAME.PRICE;
     static final String IMAGE_URL = Const.SQLITE.TABLE_NAME.IMAGE_URL;
-
+    static final String PRODUCT_IN_STOCK = Const.SQLITE.TABLE_NAME.PRODUCT_IN_STOCK;
     static final String TAG = Const.SQLITE.TAG;
     static final String DATABASE_NAME = Const.SQLITE.DATABASE_NAME;
     static final String DATABASE_TABLE = Const.SQLITE.DATABASE_TABLE;
@@ -33,7 +33,8 @@ public class DBAdapter {
             " (" +  KEY_ROWID +" integer primary key autoincrement, " +
             CUSTOMER_ID + " integer not null, " + PRODUCT_ID +" integer not null, " +
             PRODUCT_NAME + " text not null, " + QUANTITY + " integer not null, " +
-            PRICE + " integer not null, " + IMAGE_URL + " text not null);";
+            PRICE + " integer not null, " + IMAGE_URL + " text not null, " +
+            PRODUCT_IN_STOCK + " integer not null);";
 
     final Context context;
 
@@ -89,10 +90,11 @@ public class DBAdapter {
         initValues.put(QUANTITY, item.getQuantity());
         initValues.put(PRICE, item.getPrice());
         initValues.put(IMAGE_URL, item.getImageUrl());
+        initValues.put(PRODUCT_IN_STOCK, item.getProductInStock());
         return db.insert(DATABASE_TABLE, null, initValues);
     }
 
-    private String[] tables = new String[] {KEY_ROWID, CUSTOMER_ID, PRODUCT_ID, PRODUCT_NAME, QUANTITY, PRICE, IMAGE_URL};
+    private String[] tables = new String[] {KEY_ROWID, CUSTOMER_ID, PRODUCT_ID, PRODUCT_NAME, QUANTITY, PRICE, IMAGE_URL, PRODUCT_IN_STOCK};
 
     // FIND ITEM BY CUSTOMER ID AND PRODUCT ID
     public Cursor findItemByCustomerIDAndProductID(int customerId, int productId) {
@@ -105,7 +107,7 @@ public class DBAdapter {
     }
 
     // DELETE A PARTICULAR CART ITEM
-    public boolean deleteCartItem(long rowId) {
+    public boolean deleteCartItem(int rowId) {
         return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
@@ -115,7 +117,7 @@ public class DBAdapter {
     }
 
     // UPDATE CART ITEM
-    public boolean updateQuantityOfItem(long rowId, int quantity) {
+    public boolean updateQuantityOfItem(int rowId, int quantity) {
         ContentValues args = new ContentValues();
         args.put(QUANTITY, quantity);
         return db.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;

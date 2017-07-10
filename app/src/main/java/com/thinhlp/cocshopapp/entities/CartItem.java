@@ -12,6 +12,7 @@ public class CartItem {
     private int quantity;
     private int price;
     private String imageUrl;
+    private int productInStock;
 
     public CartItem() {
     }
@@ -21,11 +22,12 @@ public class CartItem {
         this.productId = product.getProductId();
         this.productName = product.getProductName();
         this.quantity = quantity;
+        this.productInStock = product.getQuantity();
         this.price = product.getPrice();
         this.imageUrl = product.getImageUrl();
     }
 
-    public CartItem(int id, int customerId, int productId, String productName, int quantity, int price, String imageUrl) {
+    public CartItem(int id, int customerId, int productId, String productName, int quantity, int price, String imageUrl, int productInStock) {
         this.id = id;
         this.customerId = customerId;
         this.productId = productId;
@@ -33,6 +35,15 @@ public class CartItem {
         this.quantity = quantity;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.productInStock = productInStock;
+    }
+
+    public int getProductInStock() {
+        return productInStock;
+    }
+
+    public void setProductInStock(int productInStock) {
+        this.productInStock = productInStock;
     }
 
     public int getId() {

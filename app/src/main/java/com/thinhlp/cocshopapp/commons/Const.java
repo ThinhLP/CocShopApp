@@ -31,6 +31,7 @@ public class Const {
             public static final String QUANTITY = "quantity";
             public static final String PRICE = "price";
             public static final String IMAGE_URL = "imageUrl";
+            public static final String PRODUCT_IN_STOCK = "proInStock";
         }
 
         public static final String TAG = "DBAdapter";
