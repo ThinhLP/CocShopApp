@@ -29,7 +29,7 @@ public class Product {
     @SerializedName("description")
     @Expose
     private String description;
-    @SerializedName("tblCategoryByTblCategoryCategoryId")
+    @SerializedName("category")
     @Expose
     private Category category;
     @SerializedName("imageUrl")
