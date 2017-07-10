@@ -2,20 +2,15 @@ package com.thinhlp.cocshopapp.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
-import com.thinhlp.cocshopapp.commons.Const;
-import com.thinhlp.cocshopapp.commons.Utils;
 import com.thinhlp.cocshopapp.entities.User;
 import com.thinhlp.cocshopapp.services.UserService;
 
@@ -50,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     public void checkLogin() {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
-        if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(getBaseContext(), "Username and password must be filled", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -58,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
-                int statusCode  = response.code();
+                int statusCode = response.code();
                 switch (statusCode) {
                     case Const.HTTP_STATUS.OK:
                         User user = response.body();
@@ -92,6 +87,12 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(this.getBaseContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void signup(View view) {
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void switchToCustomerActivity() {
         Intent i = new Intent(this, CustomerActivity.class);
         startActivity(i);
@@ -105,6 +106,5 @@ public class LoginActivity extends AppCompatActivity {
 
         editor.commit();
     }
-
 
 }
