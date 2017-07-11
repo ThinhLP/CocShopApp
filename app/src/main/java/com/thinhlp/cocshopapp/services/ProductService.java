@@ -13,6 +13,6 @@ import retrofit2.http.GET;
 
 public interface ProductService {
 
-    @GET("products")
+    @GET("product")
     Call<List<Product>> listProducts();
 }

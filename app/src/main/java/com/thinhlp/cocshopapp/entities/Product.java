@@ -20,12 +20,6 @@ public class Product {
     @SerializedName("price")
     @Expose
     private Integer price;
-    @SerializedName("createAt")
-    @Expose
-    private String createAt;
-    @SerializedName("updateAt")
-    @Expose
-    private String updateAt;
     @SerializedName("description")
     @Expose
     private String description;
@@ -39,13 +33,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(Integer productId, String productName, Integer quantity, Integer price, String createAt, String updateAt, String description, Category category, String imageUrl) {
+    public Product(Integer productId, String productName, Integer quantity, Integer price, String description, Category category, String imageUrl) {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
         this.description = description;
         this.category = category;
         this.imageUrl = imageUrl;
@@ -81,22 +73,6 @@ public class Product {
 
     public void setPrice(Integer price) {
         this.price = price;
-    }
-
-    public String getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(String createAt) {
-        this.createAt = createAt;
-    }
-
-    public String getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(String updateAt) {
-        this.updateAt = updateAt;
     }
 
     public String getDescription() {
