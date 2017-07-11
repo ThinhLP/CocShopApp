@@ -1,5 +1,6 @@
 package com.thinhlp.cocshopapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Username and password must be filled", Toast.LENGTH_SHORT).show();
             return;
         }
+        final ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
         userService.checkLogin(username, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -74,11 +76,13 @@ public class LoginActivity extends AppCompatActivity {
                         makeToast("Login failed");
                         break;
                 }
+                dialog.dismiss();
 
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                dialog.dismiss();
                 makeToast("Can't connect to server");
             }
         });

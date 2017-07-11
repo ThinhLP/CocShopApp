@@ -1,6 +1,7 @@
 package com.thinhlp.cocshopapp.activities;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -91,27 +92,28 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Email doesn't match!", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        final ProgressDialog dialog = ProgressDialog.show(this, "Loading", "Please wait...", true);
         userService.register(username, password, firstname, lastname, email, date, phone).enqueue(new Callback<RegisterError>() {
             @Override
             public void onResponse(Call<RegisterError> call, Response<RegisterError> response) {
                 int statusCode = response.body().getCode();
 
                 if (statusCode == Const.HTTP_STATUS.OK) {
-                    Toast.makeText(getBaseContext(), "Sign up successfully", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    Toast.makeText(getBaseContext(), "Sign up successfully!", Toast.LENGTH_SHORT).show();
                     returnLogin();
-                }
-
-                if (statusCode == Const.HTTP_STATUS.BAD_REQUEST) {
+                    return;
+                } else if (statusCode == Const.HTTP_STATUS.BAD_REQUEST) {
                     String status = response.body().getMessages().get(0);
                     Toast.makeText(getBaseContext(), status, Toast.LENGTH_SHORT).show();
-                    return;
                 }
+                dialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<RegisterError> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Error!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Can't register. Please try again!", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             }
         });
     }
