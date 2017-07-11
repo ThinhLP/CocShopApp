@@ -5,10 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.squareup.picasso.Picasso;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.entities.Product;
+import com.thinhlp.cocshopapp.filters.ProductFilter;
 import com.thinhlp.cocshopapp.viewholders.ProductViewHolder;
 
 import java.util.ArrayList;
@@ -18,13 +21,15 @@ import java.util.List;
  * Created by thinhlp on 7/7/17.
  */
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
-    private List<Product> productList = new ArrayList<>();
+public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> implements Filterable {
+    public List<Product> productList = new ArrayList<>(), filterList;
     private Context context;
+    private ProductFilter productFilter;
 
     public ProductAdapter(Context context, List<Product> productList) {
         this.productList = productList;
         this.context = context;
+        this.filterList = productList;
     }
 
     @Override
@@ -51,5 +56,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductViewHolder> {
     @Override
     public int getItemCount() {
         return productList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (productFilter == null) {
+            productFilter = new ProductFilter(this, filterList);
+        }
+        return productFilter;
     }
 }

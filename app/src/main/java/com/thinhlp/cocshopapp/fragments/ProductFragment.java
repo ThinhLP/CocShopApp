@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class ProductFragment extends Fragment {
     private ProductAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ProductService productService;
+    private SearchView searchView;
 
     public static ProductFragment newInstance() {
         ProductFragment fragment = new ProductFragment();
@@ -56,6 +58,8 @@ public class ProductFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_product, container, false);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rvProduct);
+        searchView = (SearchView) rootView.findViewById(R.id.mSearch);
+        configSearchView();
         return rootView;
     }
 
@@ -83,6 +87,21 @@ public class ProductFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
                 Toast.makeText(getActivity(), "Can't connect to server. Please try later!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void configSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
             }
         });
     }
