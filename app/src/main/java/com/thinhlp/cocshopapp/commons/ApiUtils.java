@@ -1,6 +1,7 @@
 package com.thinhlp.cocshopapp.commons;
 
 import com.thinhlp.cocshopapp.remote.RetrofitClient;
+import com.thinhlp.cocshopapp.services.OrderService;
 import com.thinhlp.cocshopapp.services.ProductService;
 import com.thinhlp.cocshopapp.services.UserService;
 
@@ -22,5 +23,9 @@ public class ApiUtils {
 
     public static ProductService getProductService() {
         return RetrofitClient.getClient(BASE_URL).create(ProductService.class);
+    }
+
+    public static OrderService getOrderService() {
+        return RetrofitClient.getClient(BASE_URL).create(OrderService.class);
     }
 }

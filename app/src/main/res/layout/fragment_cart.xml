@@ -7,8 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvCart"
@@ -55,7 +54,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnCheckout"
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/txtTotal"
@@ -66,7 +65,8 @@
                 android:layout_marginRight="23dp"
                 android:background="@color/colorAccent"
                 android:text="Check out"
-                android:textColor="#fff" />
+                android:textColor="#fff"
+                />
 
         </RelativeLayout>
 

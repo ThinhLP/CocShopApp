@@ -7,6 +7,7 @@ import android.database.Cursor;
 import com.thinhlp.cocshopapp.adapters.DBAdapter;
 import com.thinhlp.cocshopapp.commons.Const;
 import com.thinhlp.cocshopapp.entities.CartItem;
+import com.thinhlp.cocshopapp.entities.Order;
 import com.thinhlp.cocshopapp.entities.Product;
 
 import java.util.ArrayList;
@@ -98,4 +99,24 @@ public class CartService {
         return result;
     }
 
+    public Order convertCurrentCartToOrder() {
+        List<CartItem> cart = getCart();
+        if (cart.isEmpty()) {
+            return null;
+        }
+        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
+        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        int empId = 1;
+        return new Order(customerId, empId, cart);
+
+    }
+
+    public boolean deleteAllItem() {
+        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
+        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        db.open();
+        boolean result = db.deleteCartItemsByUserId(customerId);
+        db.close();
+        return result;
+    }
 }
