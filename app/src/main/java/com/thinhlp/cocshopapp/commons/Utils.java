@@ -1,9 +1,8 @@
 package com.thinhlp.cocshopapp.commons;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.widget.Toast;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by thinhlp on 7/4/17.
@@ -11,4 +10,8 @@ import android.widget.Toast;
 
 public class Utils {
 
+    public static String formatDate(Date date, String pattern) {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        return sdf.format(date);
+    }
 }

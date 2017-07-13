@@ -3,8 +3,6 @@ package com.thinhlp.cocshopapp.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -18,14 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.thinhlp.cocshopapp.CustomerCheckoutActivity;
+import com.thinhlp.cocshopapp.activities.CustomerCheckoutActivity;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.adapters.CartAdapter;
-import com.thinhlp.cocshopapp.adapters.ProductAdapter;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
 import com.thinhlp.cocshopapp.commons.Const;
 import com.thinhlp.cocshopapp.entities.CartItem;
@@ -34,7 +27,6 @@ import com.thinhlp.cocshopapp.listeners.CartListener;
 import com.thinhlp.cocshopapp.services.CartService;
 import com.thinhlp.cocshopapp.services.OrderService;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -153,6 +145,7 @@ public class CartFragment extends Fragment implements CartListener {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        resetCart();
                         toQRCodeActivity();
                     }
                 })
