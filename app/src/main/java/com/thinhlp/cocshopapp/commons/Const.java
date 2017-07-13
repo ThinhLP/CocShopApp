@@ -41,4 +41,8 @@ public class Const {
         public static final int DATABASE_VERSION = 1;
     }
 
+    public static class INTENT_EXTRA {
+        public static final String CART_JSON = "CART_JSON";
+    }
+
 }

@@ -2,6 +2,9 @@ package com.thinhlp.cocshopapp.fragments;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.thinhlp.cocshopapp.CustomerCheckoutActivity;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.adapters.CartAdapter;
 import com.thinhlp.cocshopapp.adapters.ProductAdapter;
@@ -145,12 +153,21 @@ public class CartFragment extends Fragment implements CartListener {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        checkout();
+                        toQRCodeActivity();
                     }
                 })
                 .setNegativeButton("Cancel", null);
         builder.show();
     }
+
+    public void toQRCodeActivity() {
+        Intent intent = new Intent(getContext(), CustomerCheckoutActivity.class);
+        Gson gson = new Gson();
+        String cartJson = gson.toJson(items);
+        intent.putExtra(Const.INTENT_EXTRA.CART_JSON, cartJson);
+        startActivity(intent);
+    }
+
 
     public void checkout() {
         OrderService orderService = ApiUtils.getOrderService();
