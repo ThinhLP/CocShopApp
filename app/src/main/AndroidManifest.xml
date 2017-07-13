@@ -20,9 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.RegisterActivity"></activity>
+        <activity android:name=".activities.RegisterActivity" />
         <activity
             android:name=".activities.CustomerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EmployeeActivity"
             android:screenOrientation="portrait" />
     </application>
 

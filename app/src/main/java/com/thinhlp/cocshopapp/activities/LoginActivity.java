@@ -67,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                                 switchToCustomerActivity();
                                 break;
                             case Const.ROLE.EMPLOYEE:
+                                switchToEmployeeActivity();
+                                break;
                             case Const.ROLE.ADMIN:
                                 switchToCustomerActivity();
                                 break;
@@ -100,6 +102,11 @@ public class LoginActivity extends AppCompatActivity {
 
     public void switchToCustomerActivity() {
         Intent i = new Intent(this, CustomerActivity.class);
+        startActivity(i);
+    }
+
+    public void switchToEmployeeActivity() {
+        Intent i = new Intent(this, EmployeeActivity.class);
         startActivity(i);
     }
 
