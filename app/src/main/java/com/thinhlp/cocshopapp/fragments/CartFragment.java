@@ -21,6 +21,7 @@ import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.adapters.CartAdapter;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
 import com.thinhlp.cocshopapp.commons.Const;
+import com.thinhlp.cocshopapp.entities.Cart;
 import com.thinhlp.cocshopapp.entities.CartItem;
 import com.thinhlp.cocshopapp.entities.Order;
 import com.thinhlp.cocshopapp.listeners.CartListener;
@@ -145,8 +146,8 @@ public class CartFragment extends Fragment implements CartListener {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        resetCart();
                         toQRCodeActivity();
+                        resetCart();
                     }
                 })
                 .setNegativeButton("Cancel", null);
@@ -156,7 +157,8 @@ public class CartFragment extends Fragment implements CartListener {
     public void toQRCodeActivity() {
         Intent intent = new Intent(getContext(), CustomerCheckoutActivity.class);
         Gson gson = new Gson();
-        String cartJson = gson.toJson(items);
+        Cart cart = cartService.createCartObject(items);
+        String cartJson = gson.toJson(cart);
         intent.putExtra(Const.INTENT_EXTRA.CART_JSON, cartJson);
         startActivity(intent);
     }
@@ -164,7 +166,8 @@ public class CartFragment extends Fragment implements CartListener {
 
     public void checkout() {
         OrderService orderService = ApiUtils.getOrderService();
-        Order order = cartService.convertCurrentCartToOrder();
+        // Unmark and pass your cart ****
+        Order order = cartService.convertCartToOrder(null);
 
         final ProgressDialog dialog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
         orderService.checkout("application/json", order).enqueue(new Callback<Void>() {
@@ -175,7 +178,7 @@ public class CartFragment extends Fragment implements CartListener {
                 switch (statusCode) {
                     case Const.HTTP_STATUS.OK:
                         Toast.makeText(getActivity(), "Checkout successfully!", Toast.LENGTH_SHORT).show();
-                        resetCart();
+                        // To-do
                         break;
                     case Const.HTTP_STATUS.BAD_REQUEST:
                         Toast.makeText(getActivity(), "Checkout failed. Please try again!", Toast.LENGTH_SHORT).show();

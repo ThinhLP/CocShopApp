@@ -108,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sp.edit();
 
         editor.putInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, user.getUserId());
+        editor.putString(Const.APP_SHARED_PREFERENCE.KEY_FULLNAME, user.getFirstname() + " " + user.getLastname());
 
         editor.commit();
     }
