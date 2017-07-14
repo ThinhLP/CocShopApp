@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.thinhlp.cocshopapp.R;
+import com.thinhlp.cocshopapp.activities.EmployeeActivity;
 import com.thinhlp.cocshopapp.adapters.ProductAdapter;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
 import com.thinhlp.cocshopapp.commons.Const;
@@ -24,7 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class QRFragment extends Fragment {
-
     private RecyclerView.LayoutManager mLayoutManager;
     public static QRFragment newInstance() {
         QRFragment fragment = new QRFragment();

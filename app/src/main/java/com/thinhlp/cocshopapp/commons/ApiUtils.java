@@ -14,7 +14,7 @@ public class ApiUtils {
 //    public static final String BASE_URL = "http://192.168.1.104:8080/api/1.0/";
     //public static final String BASE_URL = "http://10.0.2.2:8080/api/1.0/";
 //    public static final String BASE_URL = "http://192.168.2.31:8080/api/1.0/";
-    public static final String BASE_URL = "http://192.168.43.130:8080/api/1.0/";
+    public static final String BASE_URL = "http://192.168.43.130:8090/api/1.0/";
 
     public static UserService getUserService() {
         return RetrofitClient.getClient(BASE_URL).create(UserService.class);
