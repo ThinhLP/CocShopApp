@@ -6,10 +6,14 @@ import android.database.Cursor;
 
 import com.thinhlp.cocshopapp.adapters.DBAdapter;
 import com.thinhlp.cocshopapp.commons.Const;
+import com.thinhlp.cocshopapp.commons.Utils;
+import com.thinhlp.cocshopapp.entities.Cart;
 import com.thinhlp.cocshopapp.entities.CartItem;
+import com.thinhlp.cocshopapp.entities.Order;
 import com.thinhlp.cocshopapp.entities.Product;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +28,14 @@ public class CartService {
     public CartService(Context context) {
         this.context = context;
         db = new DBAdapter(context);
+    }
+
+    public Cart createCartObject(List<CartItem> items) {
+        if (items.isEmpty())
+            return null;
+        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
+        String fullName = sp.getString(Const.APP_SHARED_PREFERENCE.KEY_FULLNAME, "");
+        return new Cart(fullName, Utils.formatDate(new Date(), "hh:mm:ss dd-MM-yyyy"), items);
     }
 
     public String addToCart(Product product, int quantity) {
@@ -98,4 +110,24 @@ public class CartService {
         return result;
     }
 
+    public Order convertCartToOrder(Cart cart) {
+        if (cart == null) {
+            return null;
+        }
+
+        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
+        int empId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+
+        return new Order(cart.getCartItems().get(0).getCustomerId(), empId, cart.getCartItems());
+
+    }
+
+    public boolean deleteAllItem() {
+        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
+        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        db.open();
+        boolean result = db.deleteCartItemsByUserId(customerId);
+        db.close();
+        return result;
+    }
 }

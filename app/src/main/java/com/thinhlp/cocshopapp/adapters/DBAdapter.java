@@ -111,6 +111,10 @@ public class DBAdapter {
         return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
 
+    public boolean deleteCartItemsByUserId(int cusID) {
+        return db.delete(DATABASE_TABLE, CUSTOMER_ID + "=" + cusID, null) > 0;
+    }
+
     // GET ALL CART ITEMS OF CUSTOMER
     public Cursor getAllItems(int customerId) {
         return db.query(DATABASE_TABLE, tables, CUSTOMER_ID + "=" + customerId, null, null, null, null);

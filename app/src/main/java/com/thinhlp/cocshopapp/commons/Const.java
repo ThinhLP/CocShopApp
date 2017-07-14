@@ -21,6 +21,7 @@ public class Const {
     public static class APP_SHARED_PREFERENCE {
         public static final String SP_NAME = "CocShopSharedPreference";
         public static final String KEY_USER_ID = "USER_ID";
+        public static final String KEY_FULLNAME = "FULL_NAME";
     }
 
     public static class SQLITE {
@@ -39,6 +40,10 @@ public class Const {
         public static final String DATABASE_NAME = "CocshopDB";
         public static final String DATABASE_TABLE = "Cart";
         public static final int DATABASE_VERSION = 1;
+    }
+
+    public static class INTENT_EXTRA {
+        public static final String CART_JSON = "CART_JSON";
     }
 
 }

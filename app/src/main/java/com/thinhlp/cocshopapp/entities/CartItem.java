@@ -1,16 +1,26 @@
 package com.thinhlp.cocshopapp.entities;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by thinhlp on 7/7/17.
  */
 
 public class CartItem {
+    @SerializedName("productId")
+    @Expose
+    private Integer productId;
+    @SerializedName("quantity")
+    @Expose
+    private Integer quantity;
+    @SerializedName("price")
+    @Expose
+    private Integer price;
+
     private int id;
     private int customerId;
-    private int productId;
     private String productName;
-    private int quantity;
-    private int price;
     private String imageUrl;
     private int productInStock;
 
