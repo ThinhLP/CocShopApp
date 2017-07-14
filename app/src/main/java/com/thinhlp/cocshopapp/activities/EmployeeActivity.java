@@ -1,6 +1,8 @@
 package com.thinhlp.cocshopapp.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,14 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.entities.CartItem;
 import com.thinhlp.cocshopapp.fragments.CartFragment;
@@ -95,8 +102,13 @@ public class EmployeeActivity extends AppCompatActivity {
             } else {
                 //if qr contains data
                 try {
+                    String stringJson = result.getContents();
+
+                    // Update QR Img
+                    changeQrImg(stringJson);
+
                     // Parse JSON Array to CartItem Array
-                    JSONArray jsonArray = new JSONArray(result.getContents());
+                    JSONArray jsonArray = new JSONArray(stringJson);
                     JsonParser parser = new JsonParser();
                     JSONObject obj = null;
                     JsonElement mJson = null;
@@ -123,4 +135,23 @@ public class EmployeeActivity extends AppCompatActivity {
         }
     }
 
+
+    public void changeQrImg(String json) {
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(json, BarcodeFormat.QR_CODE, 512, 512);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            ((ImageView) findViewById(R.id.imgQR)).setImageBitmap(bmp);
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+    }
 }
