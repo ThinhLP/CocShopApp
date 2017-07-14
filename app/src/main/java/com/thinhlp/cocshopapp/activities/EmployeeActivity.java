@@ -13,15 +13,23 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.thinhlp.cocshopapp.R;
+import com.thinhlp.cocshopapp.entities.CartItem;
 import com.thinhlp.cocshopapp.fragments.CartFragment;
 import com.thinhlp.cocshopapp.fragments.HistoryFragment;
 import com.thinhlp.cocshopapp.fragments.QRFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thinhlp on 7/4/17.
@@ -87,22 +95,27 @@ public class EmployeeActivity extends AppCompatActivity {
             } else {
                 //if qr contains data
                 try {
-                    //converting the data to json
-                    JSONObject obj = new JSONObject(result.getContents());
-                    //setting values to textviews
-                    txtUserInfo.setText(obj.getString("username") + ", Order date: " + obj.getString("date??"));
+                    // Parse JSON Array to CartItem Array
+                    JSONArray jsonArray = new JSONArray(result.getContents());
+                    JsonParser parser = new JsonParser();
+                    JSONObject obj = null;
+                    JsonElement mJson = null;
+                    Gson gson = new Gson();
+                    CartItem cartItem = new CartItem();
+                    List<CartItem> cartItems = new ArrayList<CartItem>();
 
-                    // parse json -> obj -> show len cart
-
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        obj = (JSONObject) jsonArray.get(i);
+                        mJson = parser.parse(obj.toString());
+                        cartItem = gson.fromJson(mJson, CartItem.class);
+                        cartItems.add(cartItem);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    //if control comes here
-                    //that means the encoded format not matches
-                    //in this case you can display whatever data is available on the qrcode
-                    //to a toast
+
                     Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
-                    Log.w("Khoa", result.getContents());
+                    Log.w("Json-Unable to parse", result.getContents());
                 }
             }
         } else {
