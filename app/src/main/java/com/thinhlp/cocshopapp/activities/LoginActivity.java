@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
 
         editor.putInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, user.getUserId());
         editor.putString(Const.APP_SHARED_PREFERENCE.KEY_FULLNAME, user.getFirstname() + " " + user.getLastname());
-
+        editor.putInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ROLE, user.getRole());
         editor.commit();
     }
 

@@ -20,24 +20,6 @@ public class Order {
     @SerializedName("cartItems")
     @Expose
     private List<CartItem> cartItems = null;
-    private String customerName;
-    private String orderDate;
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -69,11 +51,4 @@ public class Order {
         this.cartItems = cartItems;
     }
 
-    public Order(Integer userId, Integer employeeId, List<CartItem> cartItems, String customerName, String orderDate) {
-        this.userId = userId;
-        this.employeeId = employeeId;
-        this.cartItems = cartItems;
-        this.customerName = customerName;
-        this.orderDate = orderDate;
-    }
 }

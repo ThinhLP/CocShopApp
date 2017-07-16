@@ -1,4 +1,4 @@
-package com.thinhlp.cocshopapp.adapters;
+package com.thinhlp.cocshopapp.adapters.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,14 +16,14 @@ import com.thinhlp.cocshopapp.entities.CartItem;
  */
 
 public class DBAdapter {
-    static final String KEY_ROWID = Const.SQLITE.TABLE_NAME.KEY_ROWID;
-    static final String CUSTOMER_ID = Const.SQLITE.TABLE_NAME.CUSTOMER_ID;
-    static final String PRODUCT_ID = Const.SQLITE.TABLE_NAME.PRODUCT_ID;
-    static final String PRODUCT_NAME = Const.SQLITE.TABLE_NAME.PRODUCT_NAME;
-    static final String QUANTITY = Const.SQLITE.TABLE_NAME.QUANTITY;
-    static final String PRICE = Const.SQLITE.TABLE_NAME.PRICE;
-    static final String IMAGE_URL = Const.SQLITE.TABLE_NAME.IMAGE_URL;
-    static final String PRODUCT_IN_STOCK = Const.SQLITE.TABLE_NAME.PRODUCT_IN_STOCK;
+    static final String KEY_ROWID = Const.SQLITE.CART_COLUMN_NAME.KEY_ROWID;
+    static final String CUSTOMER_ID = Const.SQLITE.CART_COLUMN_NAME.CUSTOMER_ID;
+    static final String PRODUCT_ID = Const.SQLITE.CART_COLUMN_NAME.PRODUCT_ID;
+    static final String PRODUCT_NAME = Const.SQLITE.CART_COLUMN_NAME.PRODUCT_NAME;
+    static final String QUANTITY = Const.SQLITE.CART_COLUMN_NAME.QUANTITY;
+    static final String PRICE = Const.SQLITE.CART_COLUMN_NAME.PRICE;
+    static final String IMAGE_URL = Const.SQLITE.CART_COLUMN_NAME.IMAGE_URL;
+    static final String PRODUCT_IN_STOCK = Const.SQLITE.CART_COLUMN_NAME.PRODUCT_IN_STOCK;
     static final String TAG = Const.SQLITE.TAG;
     static final String DATABASE_NAME = Const.SQLITE.DATABASE_NAME;
     static final String DATABASE_TABLE = Const.SQLITE.DATABASE_TABLE;
@@ -94,11 +94,11 @@ public class DBAdapter {
         return db.insert(DATABASE_TABLE, null, initValues);
     }
 
-    private String[] tables = new String[] {KEY_ROWID, CUSTOMER_ID, PRODUCT_ID, PRODUCT_NAME, QUANTITY, PRICE, IMAGE_URL, PRODUCT_IN_STOCK};
+    private String[] columns = new String[] {KEY_ROWID, CUSTOMER_ID, PRODUCT_ID, PRODUCT_NAME, QUANTITY, PRICE, IMAGE_URL, PRODUCT_IN_STOCK};
 
     // FIND ITEM BY CUSTOMER ID AND PRODUCT ID
     public Cursor findItemByCustomerIDAndProductID(int customerId, int productId) {
-        Cursor mCursor = db.query(true, DATABASE_TABLE, tables,
+        Cursor mCursor = db.query(true, DATABASE_TABLE, columns,
                 CUSTOMER_ID + "=" + customerId + " AND " + PRODUCT_ID + "=" + productId, null, null,null,null,null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -115,10 +115,19 @@ public class DBAdapter {
         return db.delete(DATABASE_TABLE, CUSTOMER_ID + "=" + cusID, null) > 0;
     }
 
+    public boolean deleteAllCartItem() {
+        return db.delete(DATABASE_TABLE, null, null) > 0;
+    }
+
     // GET ALL CART ITEMS OF CUSTOMER
     public Cursor getAllItems(int customerId) {
-        return db.query(DATABASE_TABLE, tables, CUSTOMER_ID + "=" + customerId, null, null, null, null);
+        return db.query(DATABASE_TABLE, columns, CUSTOMER_ID + "=" + customerId, null, null, null, null);
     }
+
+    public Cursor getAllItems() {
+        return db.query(DATABASE_TABLE, columns, null, null, null, null, null);
+    }
+
 
     // UPDATE CART ITEM
     public boolean updateQuantityOfItem(int rowId, int quantity) {

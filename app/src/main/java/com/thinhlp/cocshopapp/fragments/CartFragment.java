@@ -21,6 +21,7 @@ import com.thinhlp.cocshopapp.activities.CustomerCheckoutActivity;
 import com.thinhlp.cocshopapp.adapters.CartAdapter;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
 import com.thinhlp.cocshopapp.commons.Const;
+import com.thinhlp.cocshopapp.commons.Utils;
 import com.thinhlp.cocshopapp.entities.Cart;
 import com.thinhlp.cocshopapp.entities.CartItem;
 import com.thinhlp.cocshopapp.entities.Order;
@@ -35,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CartFragment extends Fragment implements CartListener {
-    public List<CartItem> items;
+    private List<CartItem> items;
     private RecyclerView recyclerView;
     private static CartAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -46,12 +47,6 @@ public class CartFragment extends Fragment implements CartListener {
 
     public static CartFragment newInstance() {
         CartFragment fragment = new CartFragment();
-        return fragment;
-    }
-
-    public static CartFragment newInstance(CartAdapter adapter) {
-        CartFragment fragment = new CartFragment();
-        mAdapter = adapter;
         return fragment;
     }
 
@@ -76,12 +71,11 @@ public class CartFragment extends Fragment implements CartListener {
         txtTotal = (TextView) rootView.findViewById(R.id.txtTotal);
         btnCheckout = (Button) rootView.findViewById(R.id.btnCheckout);
 
-        btnCheckout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickToCheckout();
-            }
-        });
+        if (Utils.isStaff(getContext())) {
+            setUpButtonForStaff();
+        } else {
+            setUpButtonForCustomer();
+        }
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -90,6 +84,26 @@ public class CartFragment extends Fragment implements CartListener {
         recyclerView.setAdapter(mAdapter);
         calculateMoney();
         return rootView;
+    }
+
+    private void setUpButtonForStaff() {
+        btnCheckout.setText("Checkout");
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickToCheckout();
+            }
+        });
+    }
+
+    private void setUpButtonForCustomer() {
+        btnCheckout.setText("Order");
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickToOrder();
+            }
+        });
     }
 
     public void getCart() {
@@ -143,13 +157,14 @@ public class CartFragment extends Fragment implements CartListener {
         }
     }
 
-    public void clickToCheckout() {
+    // For customer
+    public void clickToOrder() {
         if (items.isEmpty()) {
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Confirmation")
-                .setMessage("Do you want to check out?")
+                .setMessage("Do you want to order?")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -170,11 +185,37 @@ public class CartFragment extends Fragment implements CartListener {
         startActivity(intent);
     }
 
+    public void resetCart() {
+        cartService.deleteAllItem();
+        getCart();
+        recyclerView.swapAdapter(new CartAdapter(getActivity(), items, this), false);
+        calculateMoney();
+    }
+
+
+    // For staff
+    public void clickToCheckout() {
+        if (items.isEmpty()) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Confirmation")
+                .setMessage("Do you want to check out?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        checkout();
+                        resetCart();
+                    }
+                })
+                .setNegativeButton("Cancel", null);
+        builder.show();
+    }
 
     public void checkout() {
         OrderService orderService = ApiUtils.getOrderService();
-        // Unmark and pass your cart ****
-        Order order = cartService.convertCartToOrder(null);
+
+        Order order = cartService.convertCartItemsToOrder(items);
 
         final ProgressDialog dialog = ProgressDialog.show(getContext(), "Loading", "Please wait...", true);
         orderService.checkout("application/json", order).enqueue(new Callback<Void>() {
@@ -199,12 +240,5 @@ public class CartFragment extends Fragment implements CartListener {
                 Toast.makeText(getActivity(), "Can't connect to server. Please try later!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void resetCart() {
-        cartService.deleteAllItem();
-        getCart();
-        recyclerView.swapAdapter(new CartAdapter(getActivity(), items, this), false);
-        calculateMoney();
     }
 }

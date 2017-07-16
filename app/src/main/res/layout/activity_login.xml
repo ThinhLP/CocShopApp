@@ -46,7 +46,7 @@
                 android:layout_marginLeft="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="cus" />
+                android:text="admin" />
         </TableRow>
 
         <TableRow
@@ -67,7 +67,7 @@
                 android:layout_marginLeft="10dp"
                 android:ems="10"
                 android:inputType="textPassword"
-                android:text="cus" />
+                android:text="admin" />
         </TableRow>
 
     </TableLayout>

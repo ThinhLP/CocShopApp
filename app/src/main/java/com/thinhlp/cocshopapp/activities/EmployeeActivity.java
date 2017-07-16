@@ -1,6 +1,8 @@
 package com.thinhlp.cocshopapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,11 +26,14 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.thinhlp.cocshopapp.R;
+import com.thinhlp.cocshopapp.commons.Const;
+import com.thinhlp.cocshopapp.entities.Cart;
 import com.thinhlp.cocshopapp.entities.CartItem;
 import com.thinhlp.cocshopapp.entities.Order;
 import com.thinhlp.cocshopapp.fragments.CartFragment;
 import com.thinhlp.cocshopapp.fragments.HistoryFragment;
 import com.thinhlp.cocshopapp.fragments.QRFragment;
+import com.thinhlp.cocshopapp.services.CartService;
 
 import java.util.List;
 
@@ -51,9 +56,6 @@ public class EmployeeActivity extends AppCompatActivity {
                     selectedFragment = QRFragment.newInstance();
                     break;
                 case R.id.navigation_cart:
-//                    if (cartAdapter != null)
-//                        selectedFragment = CartFragment.newInstance(cartAdapter);
-//                    else
                     selectedFragment = CartFragment.newInstance();
                     break;
                 case R.id.navigation_history:
@@ -61,7 +63,7 @@ public class EmployeeActivity extends AppCompatActivity {
                     break;
             }
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content, selectedFragment);
+            transaction.replace(R.id.content_emp, selectedFragment);
             transaction.commit();
             return true;
         }
@@ -78,8 +80,12 @@ public class EmployeeActivity extends AppCompatActivity {
         qrScan = new IntentIntegrator(this);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, QRFragment.newInstance());
+        transaction.replace(R.id.content_emp, QRFragment.newInstance());
         transaction.commit();
+
+        // Remove all current cart
+        CartService cartService = new CartService(getBaseContext());
+        cartService.deleteAllItem();
     }
 
     public void scanQR(View view) {
@@ -103,24 +109,24 @@ public class EmployeeActivity extends AppCompatActivity {
                     changeQrImg(stringJson);
                     // Parse JSON Array to Order
                     Gson gson = new Gson();
-                    Order order = gson.fromJson(stringJson, Order.class);
-                    List<CartItem> cartItems = order.getCartItems();
+                    Cart cart = gson.fromJson(stringJson, Cart.class);
+                    List<CartItem> cartItems = cart.getCartItems();
 
-                    String orderInfo = "Customer Name: " + order.getCustomerName() + "\n"
-                            + "Order Date: " + order.getOrderDate();
+                    String orderInfo = "Customer Name: " + cart.getCustomerName() + "\n"
+                            + "Order Date: " + cart.getOrderDate();
                     txtOrderInfo = (TextView) findViewById(R.id.txtOrderInfo);
                     txtOrderInfo.setText(orderInfo);
-
-//                    ============================================================
-                    //Lay dc CartItems o tren roi do'
-
-//                    cartAdapter = new CartAdapter(this.getBaseContext(), cartItems, CartFragment.newInstance());
-
+                    // Save customer id
+                    SharedPreferences sp = getBaseContext().getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt(Const.APP_SHARED_PREFERENCE.KEY_CUSTOMER_ID, cart.getCustomerId());
+                    editor.commit();
+                    // Save to database
+                    CartService cartService = new CartService(getBaseContext());
+                    cartService.addListOfCartItem(cartItems);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-
-                    Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
                     Log.w("Json-Unable to parse", result.getContents());
                 }
             }

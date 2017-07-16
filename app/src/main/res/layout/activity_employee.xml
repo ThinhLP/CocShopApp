@@ -9,7 +9,7 @@
     tools:context="com.thinhlp.cocshopapp.activities.EmployeeActivity">
 
     <FrameLayout
-        android:id="@+id/content"
+        android:id="@+id/content_emp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">

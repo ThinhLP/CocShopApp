@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class Cart {
+    private int customerId;
     private String customerName;
     private String orderDate;
     private List<CartItem> cartItems;
@@ -15,17 +16,26 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(String customerName, String orderDate, List<CartItem> cartItems) {
+    public Cart(int customerId, String customerName, String orderDate, List<CartItem> cartItems) {
+        this.customerId = customerId;
         this.customerName = customerName;
         this.orderDate = orderDate;
         this.cartItems = cartItems;
     }
 
-    public String getCustomerId() {
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerName() {
         return customerName;
     }
 
-    public void setCustomerId(String customerName) {
+    public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
 

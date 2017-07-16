@@ -22,10 +22,13 @@ public class Const {
         public static final String SP_NAME = "CocShopSharedPreference";
         public static final String KEY_USER_ID = "USER_ID";
         public static final String KEY_FULLNAME = "FULL_NAME";
+        public static final String KEY_USER_ROLE = "USER_ROLE";
+
+        public static final String KEY_CUSTOMER_ID = "CUSTOMER_ID";
     }
 
     public static class SQLITE {
-        public static class TABLE_NAME {
+        public static class CART_COLUMN_NAME {
             public static final String KEY_ROWID = "_id";
             public static final String CUSTOMER_ID = "customerId";
             public static final String PRODUCT_ID = "productId";

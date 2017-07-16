@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 
-import com.thinhlp.cocshopapp.adapters.DBAdapter;
+import com.thinhlp.cocshopapp.adapters.database.DBAdapter;
 import com.thinhlp.cocshopapp.commons.Const;
 import com.thinhlp.cocshopapp.commons.Utils;
 import com.thinhlp.cocshopapp.entities.Cart;
@@ -35,7 +35,8 @@ public class CartService {
             return null;
         SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
         String fullName = sp.getString(Const.APP_SHARED_PREFERENCE.KEY_FULLNAME, "");
-        return new Cart(fullName, Utils.formatDate(new Date(), "hh:mm:ss dd-MM-yyyy"), items);
+        int customerId = Utils.getCurrentUserId(context);
+        return new Cart(customerId, fullName, Utils.formatDate(new Date(), "hh:mm:ss dd-MM-yyyy"), items);
     }
 
     public String addToCart(Product product, int quantity) {
@@ -56,8 +57,8 @@ public class CartService {
                 }
             }
         } else {
-            int id = itemCursor.getInt(itemCursor.getColumnIndex(Const.SQLITE.TABLE_NAME.KEY_ROWID));
-            int currentQuantity = itemCursor.getInt(itemCursor.getColumnIndex(Const.SQLITE.TABLE_NAME.QUANTITY));
+            int id = itemCursor.getInt(itemCursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.KEY_ROWID));
+            int currentQuantity = itemCursor.getInt(itemCursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.QUANTITY));
             if (quantity + currentQuantity > product.getQuantity()) {
                 msg = product.getProductName() + " just has " + product.getQuantity() + " left(s)";
             } else {
@@ -71,21 +72,48 @@ public class CartService {
         return msg;
     }
 
+    public void addCartItem(CartItem cartItem) {
+        db.open();
+        db.insertCartItem(cartItem);
+        db.close();
+    }
+
+    // For employee and admin
+    public void addListOfCartItem(List<CartItem> cartItems) {
+        if (cartItems == null || cartItems.isEmpty()) {
+            return;
+        }
+
+        deleteAllItem();
+
+        for (CartItem cartItem: cartItems) {
+            addCartItem(cartItem);
+        }
+    }
+
     public List<CartItem> getCart() {
         db.open();
-        int customerId = Utils.getCurrentUserId(context);
+
+        Cursor cursor;
+
+        if (Utils.isStaff(context)) {
+            cursor = db.getAllItems();
+        } else {
+            int customerId = Utils.getCurrentUserId(context);
+            cursor = db.getAllItems(customerId);
+        }
+
         List<CartItem> result = new ArrayList<>();
-        Cursor cursor = db.getAllItems(customerId);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
-                Integer id = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.KEY_ROWID));
-                Integer cusId = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.CUSTOMER_ID));
-                Integer productId = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRODUCT_ID));
-                String productName = cursor.getString(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRODUCT_NAME));
-                Integer quantity = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.QUANTITY));
-                Integer price = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRICE));
-                String imageUrl = cursor.getString(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.IMAGE_URL));
-                Integer inStock = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.TABLE_NAME.PRODUCT_IN_STOCK));
+                Integer id = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.KEY_ROWID));
+                Integer cusId = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.CUSTOMER_ID));
+                Integer productId = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.PRODUCT_ID));
+                String productName = cursor.getString(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.PRODUCT_NAME));
+                Integer quantity = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.QUANTITY));
+                Integer price = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.PRICE));
+                String imageUrl = cursor.getString(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.IMAGE_URL));
+                Integer inStock = cursor.getInt(cursor.getColumnIndex(Const.SQLITE.CART_COLUMN_NAME.PRODUCT_IN_STOCK));
                 result.add(new CartItem(id, cusId, productId, productName, quantity, price, imageUrl, inStock));
                 cursor.moveToNext();
             }
@@ -108,21 +136,30 @@ public class CartService {
         return result;
     }
 
-    public Order convertCartToOrder(Cart cart) {
-        if (cart == null) {
+    public Order convertCartItemsToOrder(List<CartItem> cartItems) {
+        if (cartItems == null || cartItems.isEmpty()) {
             return null;
         }
 
         int empId = Utils.getCurrentUserId(context);
+        int cusId = Utils.getCustomerID(context);
 
-        return new Order(cart.getCartItems().get(0).getCustomerId(), empId, cart.getCartItems());
+        return new Order(cusId, empId, cartItems);
 
     }
 
+
     public boolean deleteAllItem() {
-        int customerId = Utils.getCurrentUserId(context);
         db.open();
-        boolean result = db.deleteCartItemsByUserId(customerId);
+
+        boolean result = false;
+
+        if (Utils.isStaff(context)) {
+            result = db.deleteAllCartItem();
+        } else {
+            int customerId = Utils.getCurrentUserId(context);
+            result = db.deleteCartItemsByUserId(customerId);
+        }
         db.close();
         return result;
     }
