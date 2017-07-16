@@ -17,8 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -27,15 +25,11 @@ import com.google.zxing.integration.android.IntentResult;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.thinhlp.cocshopapp.R;
 import com.thinhlp.cocshopapp.entities.CartItem;
+import com.thinhlp.cocshopapp.entities.Order;
 import com.thinhlp.cocshopapp.fragments.CartFragment;
 import com.thinhlp.cocshopapp.fragments.HistoryFragment;
 import com.thinhlp.cocshopapp.fragments.QRFragment;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,8 +37,9 @@ import java.util.List;
  */
 
 public class EmployeeActivity extends AppCompatActivity {
-    private TextView txtUserInfo;
+    private TextView txtOrderInfo;
     private IntentIntegrator qrScan;
+    //    private CartAdapter cartAdapter = null;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -56,6 +51,9 @@ public class EmployeeActivity extends AppCompatActivity {
                     selectedFragment = QRFragment.newInstance();
                     break;
                 case R.id.navigation_cart:
+//                    if (cartAdapter != null)
+//                        selectedFragment = CartFragment.newInstance(cartAdapter);
+//                    else
                     selectedFragment = CartFragment.newInstance();
                     break;
                 case R.id.navigation_history:
@@ -75,15 +73,12 @@ public class EmployeeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee);
 
-        txtUserInfo = (TextView) findViewById(R.id.txtUserInfo);
-
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.emp_navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         qrScan = new IntentIntegrator(this);
 
-        Fragment selectedFragment = QRFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, selectedFragment);
+        transaction.replace(R.id.content, QRFragment.newInstance());
         transaction.commit();
     }
 
@@ -106,24 +101,23 @@ public class EmployeeActivity extends AppCompatActivity {
 
                     // Update QR Img
                     changeQrImg(stringJson);
-
-                    // Parse JSON Array to CartItem Array
-                    JSONArray jsonArray = new JSONArray(stringJson);
-                    JsonParser parser = new JsonParser();
-                    JSONObject obj = null;
-                    JsonElement mJson = null;
+                    // Parse JSON Array to Order
                     Gson gson = new Gson();
-                    CartItem cartItem = new CartItem();
-                    List<CartItem> cartItems = new ArrayList<CartItem>();
+                    Order order = gson.fromJson(stringJson, Order.class);
+                    List<CartItem> cartItems = order.getCartItems();
 
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        obj = (JSONObject) jsonArray.get(i);
-                        mJson = parser.parse(obj.toString());
-                        cartItem = gson.fromJson(mJson, CartItem.class);
-                        cartItems.add(cartItem);
-                    }
+                    String orderInfo = "Customer Name: " + order.getCustomerName() + "\n"
+                            + "Order Date: " + order.getOrderDate();
+                    txtOrderInfo = (TextView) findViewById(R.id.txtOrderInfo);
+                    txtOrderInfo.setText(orderInfo);
 
-                } catch (JSONException e) {
+//                    ============================================================
+                    //Lay dc CartItems o tren roi do'
+
+//                    cartAdapter = new CartAdapter(this.getBaseContext(), cartItems, CartFragment.newInstance());
+
+
+                } catch (Exception e) {
                     e.printStackTrace();
 
                     Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
