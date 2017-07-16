@@ -40,8 +40,7 @@ public class CartService {
 
     public String addToCart(Product product, int quantity) {
         db.open();
-        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
-        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        int customerId = Utils.getCurrentUserId(context);
         Cursor itemCursor = db.findItemByCustomerIDAndProductID(customerId, product.getProductId());
         boolean result;
         String msg = "Add to cart successfully!";
@@ -74,8 +73,7 @@ public class CartService {
 
     public List<CartItem> getCart() {
         db.open();
-        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
-        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        int customerId = Utils.getCurrentUserId(context);
         List<CartItem> result = new ArrayList<>();
         Cursor cursor = db.getAllItems(customerId);
         if (cursor.moveToFirst()) {
@@ -115,16 +113,14 @@ public class CartService {
             return null;
         }
 
-        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
-        int empId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        int empId = Utils.getCurrentUserId(context);
 
         return new Order(cart.getCartItems().get(0).getCustomerId(), empId, cart.getCartItems());
 
     }
 
     public boolean deleteAllItem() {
-        SharedPreferences sp = context.getSharedPreferences(Const.APP_SHARED_PREFERENCE.SP_NAME, context.MODE_PRIVATE);
-        int customerId = sp.getInt(Const.APP_SHARED_PREFERENCE.KEY_USER_ID, 0);
+        int customerId = Utils.getCurrentUserId(context);
         db.open();
         boolean result = db.deleteCartItemsByUserId(customerId);
         db.close();

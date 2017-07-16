@@ -67,10 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                                 switchToCustomerActivity();
                                 break;
                             case Const.ROLE.EMPLOYEE:
-                                switchToEmployeeActivity();
-                                break;
                             case Const.ROLE.ADMIN:
-                                switchToCustomerActivity();
+                                switchToEmployeeActivity();
                                 break;
                         }
                         break;
