@@ -44,6 +44,7 @@ public class Const {
 
     public static class INTENT_EXTRA {
         public static final String CART_JSON = "CART_JSON";
+        public static final String ORDER_JSON = "ORDER_JSON";
     }
 
 }
