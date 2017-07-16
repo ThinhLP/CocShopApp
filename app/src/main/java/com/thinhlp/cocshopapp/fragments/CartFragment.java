@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.thinhlp.cocshopapp.activities.CustomerCheckoutActivity;
 import com.thinhlp.cocshopapp.R;
+import com.thinhlp.cocshopapp.activities.CustomerCheckoutActivity;
 import com.thinhlp.cocshopapp.adapters.CartAdapter;
 import com.thinhlp.cocshopapp.commons.ApiUtils;
 import com.thinhlp.cocshopapp.commons.Const;
@@ -37,7 +37,7 @@ import retrofit2.Response;
 public class CartFragment extends Fragment implements CartListener {
     public List<CartItem> items;
     private RecyclerView recyclerView;
-    private CartAdapter mAdapter;
+    private static CartAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private TextView txtTotal;
     public long total = 0;
@@ -49,9 +49,16 @@ public class CartFragment extends Fragment implements CartListener {
         return fragment;
     }
 
+    public static CartFragment newInstance(CartAdapter adapter) {
+        CartFragment fragment = new CartFragment();
+        mAdapter = adapter;
+        return fragment;
+    }
+
     public CartFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,7 +99,7 @@ public class CartFragment extends Fragment implements CartListener {
     public void calculateMoney() {
         total = 0;
         if (items != null && !items.isEmpty()) {
-            for (CartItem item: items) {
+            for (CartItem item : items) {
                 total += item.getPrice() * item.getQuantity();
             }
         }
