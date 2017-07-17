@@ -60,8 +60,17 @@ public class HistoryFragment extends Fragment {
     }
 
     public void getOrders() {
-        OrderService orderService = ApiUtils.getOrderService();
+        if (Utils.isStaff(getContext())) {
+            getOrdersForEmployee();
+        } else {
+            getOrdersForCustomer();
+        }
+
+    }
+
+    public void getOrdersForCustomer() {
         int customerId = Utils.getCurrentUserId(getContext());
+        OrderService orderService = ApiUtils.getOrderService();
         orderService.getOrders(customerId).enqueue(new Callback<List<OrderDto>>() {
             @Override
             public void onResponse(Call<List<OrderDto>> call, Response<List<OrderDto>> response) {
@@ -75,9 +84,8 @@ public class HistoryFragment extends Fragment {
                         rvHistory.setAdapter(adapter);
                         break;
                     default:
-                        // TO DO
+                        // NO CONTENT
                 }
-
             }
 
             @Override
@@ -87,5 +95,31 @@ public class HistoryFragment extends Fragment {
         });
     }
 
+    public void getOrdersForEmployee() {
+        int empId = Utils.getCurrentUserId(getContext());
+        OrderService orderService = ApiUtils.getOrderService();
+        orderService.getOrdersByEmployee(empId).enqueue(new Callback<List<OrderDto>>() {
+            @Override
+            public void onResponse(Call<List<OrderDto>> call, Response<List<OrderDto>> response) {
+                int statusCode = response.code();
+                switch (statusCode) {
+                    case Const.HTTP_STATUS.OK:
+                        orderList = response.body();
+                        mLayoutManager = new LinearLayoutManager(getActivity());
+                        rvHistory.setLayoutManager(mLayoutManager);
+                        adapter = new HistoryAdapter(getContext(), orderList);
+                        rvHistory.setAdapter(adapter);
+                        break;
+                    default:
+                        // NO CONTENT
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<OrderDto>> call, Throwable t) {
+                Toast.makeText(getContext(), "Can't connect to server", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

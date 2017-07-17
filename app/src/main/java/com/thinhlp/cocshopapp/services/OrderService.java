@@ -23,4 +23,6 @@ public interface OrderService {
     @POST("orders")
     Call<List<OrderDto>> getOrders(@Query("customerId") Integer customerId);
 
+    @POST("orders/employee")
+    Call<List<OrderDto>> getOrdersByEmployee(@Query("empId") Integer empId);
 }
